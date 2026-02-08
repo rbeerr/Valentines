@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Be My Valentine ❤️</title>
+
     <style>
         * {
             margin: 0;
@@ -19,6 +20,7 @@
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            overflow: hidden;
         }
 
         .card {
@@ -29,6 +31,7 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
             width: 90%;
             max-width: 450px;
+            position: relative;
         }
 
         .gif {
@@ -43,9 +46,8 @@
 
         .buttons {
             margin-top: 30px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
+            position: relative;
+            height: 80px;
         }
 
         button {
@@ -55,19 +57,22 @@
             border-radius: 999px;
             cursor: pointer;
             transition: 0.25s ease;
+            position: absolute;
         }
 
         #yes {
             background: #ff4d6d;
             color: white;
+            left: 25%;
         }
 
         #yes:hover {
-            transform: scale(1.1);
+            transform: scale(1.2);
         }
 
         #no {
             background: #eee;
+            left: 55%;
         }
 
         .celebrate {
@@ -85,10 +90,10 @@
 <body>
 
     <div class="card" id="card">
-        <!-- Replace this GIF with any romantic GIF you like -->
-        <img class="gif" src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="cute love gif">
+        <img class="gif" src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif">
 
         <h1 id="question">Will you be my Valentine? 💖</h1>
+
         <div class="buttons">
             <button id="yes">Yes 😍</button>
             <button id="no">No 😢</button>
@@ -101,46 +106,61 @@
         const question = document.getElementById("question");
         const card = document.getElementById("card");
 
-        let noScale = 1;
-
         const messages = [
-            "Are you sure? 🥺",
-            "Really sure? 💔",
-            "Think again 😭",
-            "Last chance! 😩",
-            "Don't break my heart 💘"
+            "Nice try 😏",
+            "Click mo pa ulit hahaha",
+            "Bat ayaw mo? 😭",
+            "Required ang YES 😌",
+            "System error ❌ No is disabled",
+            "Ayaw kitang bigyan ng choice 😈"
         ];
 
         let msgIndex = 0;
+        let yesScale = 1;
 
-        noBtn.addEventListener("click", () => {
-            if (msgIndex < messages.length) {
-                question.textContent = messages[msgIndex];
-                msgIndex++;
-            }
+        function moveNo() {
+            const cardRect = card.getBoundingClientRect();
 
-            noScale -= 0.2;
-            if (noScale <= 0.2) {
-                noBtn.style.display = "none";
-            } else {
-                noBtn.style.transform = `scale(${noScale})`;
-            }
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
 
-            yesBtn.style.transform = `scale(${1 + (1 - noScale)})`;
+            const maxX = cardRect.width - btnWidth - 20;
+            const maxY = cardRect.height - btnHeight - 20;
+
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+
+            noBtn.style.left = randomX + "px";
+            noBtn.style.top = randomY + "px";
+
+            // Change message
+            question.textContent = messages[msgIndex % messages.length];
+            msgIndex++;
+
+            // Grow YES button 😆
+            yesScale += 0.2;
+            yesBtn.style.transform = `scale(${yesScale})`;
+        }
+
+        // ONLY CLICK (no hover)
+        noBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            moveNo();
         });
 
         yesBtn.addEventListener("click", () => {
             card.innerHTML = `
-            <img class="celebrate-gif" src="https://media.giphy.com/media/26FLdmIp6wJr91JAI/giphy.gif" alt="celebration gif">
-            <p class="celebrate">YAY!!! ❤️🥰<br><br>
-            You just made me the happiest person alive!<br>
-            I love you! 🌹</p>
+        <img class="celebrate-gif" src="https://media.giphy.com/media/26FLdmIp6wJr91JAI/giphy.gif">
+        <p class="celebrate">
+        YAAAAAAAY!!! ❤️🥳<br><br>
+        Alam ko naman di mo ako matitiis 😎<br>
+        Best decision of your life 😌
+        </p>
         `;
             card.style.padding = "60px";
         });
     </script>
 
 </body>
-
 
 </html>
